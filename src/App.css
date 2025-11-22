@@ -1,0 +1,148 @@
+body {
+  background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #020617 100%);
+  min-height: 100vh;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.auth-card,
+.dashboard-card {
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: radial-gradient(circle at top left, #0b1220 0, #020617 70%);
+  box-shadow: 0 28px 70px rgba(15, 23, 42, 0.75);
+  overflow: hidden;
+}
+
+.auth-card .card-header,
+.dashboard-card .card-header {
+  background: linear-gradient(135deg, #020617, #020617);
+  color: #e5e7eb;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.9);
+}
+
+.auth-card h3,
+.dashboard-card h3 {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.auth-card .card-body,
+.dashboard-card .card-body {
+  padding: 28px 28px 24px;
+  background: radial-gradient(circle at top, #020617 0, #020617 45%, #020617 100%);
+}
+
+/* Improve text contrast inside dashboard card */
+.dashboard-card .card-body {
+  color: #e5e7eb;
+}
+
+.dashboard-card .card-body h4 {
+  color: #f9fafb;
+}
+
+.dashboard-card .card-body .text-muted {
+  color: #cbd5f5 !important;
+}
+
+.auth-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.auth-subtitle {
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-control {
+  border-radius: 10px;
+}
+
+.btn-primary,
+.btn-success {
+  border-radius: 999px;
+  font-weight: 500;
+  padding: 10px 0;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  border: none;
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, #15803d, #166534);
+}
+
+.btn-outline-danger {
+  border-radius: 999px;
+  padding-inline: 18px;
+}
+
+.auth-footer-text {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.auth-footer-text a {
+  font-weight: 500;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.stat-card {
+  border-radius: 14px !important;
+  padding-block: 18px !important;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.45);
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.dashboard-actions .btn {
+  border-radius: 999px;
+  font-weight: 500;
+  padding-inline: 18px;
+}
+
+@media (max-width: 576px) {
+  .auth-card .card-body,
+  .dashboard-card .card-body {
+    padding-inline: 20px;
+  }
+}
