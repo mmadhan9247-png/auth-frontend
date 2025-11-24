@@ -29,14 +29,21 @@ export default function Register() {
     setSuccess("");
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/register`, formData);
+      const response = await axios.post(
+        `${API_BASE_URL}/register`,
+        formData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       setSuccess("Account created successfully! Redirecting...");
       setTimeout(() => navigate("/login"), 1500);
 
     } catch (err) {
       if (err.response) {
-        setError(err.response.data.message || "Registration failed!");
+        // FIXED: Backend returns { error: "message" }
+        setError(err.response.data.error || "Registration failed!");
       } else {
         setError("Server not responding!");
       }
