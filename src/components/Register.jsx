@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Alert from "../components/Alert";
 import { useNavigate, Link } from "react-router-dom";
@@ -16,6 +16,11 @@ export default function Register() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  // Wake backend
+  useEffect(() => {
+    axios.get(API_BASE_URL).catch(() => {});
+  }, []);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -29,9 +34,8 @@ export default function Register() {
     setSuccess("");
 
     try {
-      // ✅ FIXED URL — this was your only problem
       const response = await axios.post(
-        `${API_BASE_URL}/register`,
+        `${API_BASE_URL}/api/auth/register`,   // ✅ FINAL CORRECT URL
         formData,
         { headers: { "Content-Type": "application/json" } }
       );
@@ -78,7 +82,10 @@ export default function Register() {
           Create your new account
         </p>
 
+        {/* SUCCESS ALERT */}
         {success && <Alert type="success" message={success} />}
+
+        {/* ERROR ALERT */}
         {error && <Alert type="error" message={error} />}
 
         <form onSubmit={handleSubmit}>
