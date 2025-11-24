@@ -29,10 +29,11 @@ export default function Register() {
     setSuccess("");
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/auth/register`, formData);
+      const response = await axios.post(`${API_BASE_URL}/register`, formData);
 
       setSuccess("Account created successfully! Redirecting...");
       setTimeout(() => navigate("/login"), 1500);
+
     } catch (err) {
       if (err.response) {
         setError(err.response.data.message || "Registration failed!");
@@ -74,7 +75,7 @@ export default function Register() {
         {success && <Alert type="success" message={success} />}
 
         {/* ERROR ALERT */}
-        {error && <Alert type="error" message={error} />}
+        {error && <Alert type="danger" message={error} />}
 
         <form onSubmit={handleSubmit}>
 
