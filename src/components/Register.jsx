@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Alert from "../components/Alert";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { API_BASE_URL } from "../config";
 
 export default function Register() {
@@ -9,6 +9,7 @@ export default function Register() {
 
   const [formData, setFormData] = useState({
     username: "",
+    email: "",
     password: "",
   });
 
@@ -16,7 +17,10 @@ export default function Register() {
   const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -25,51 +29,140 @@ export default function Register() {
     setSuccess("");
 
     try {
-      await axios.post(`${API_BASE_URL}/api/auth/register`, formData);
+      const response = await axios.post(`${API_BASE_URL}/auth/register`, formData);
 
-      setSuccess("Registration successful. Please log in.");
-      setTimeout(() => navigate("/login"), 1200);
-
+      setSuccess("Account created successfully! Redirecting...");
+      setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
-      const backendMessage =
-        err.response?.data?.error || err.response?.data?.msg;
-
-      if (backendMessage) {
-        setError(backendMessage);
+      if (err.response) {
+        setError(err.response.data.message || "Registration failed!");
       } else {
-        setError("Registration failed. Please try again.");
+        setError("Server not responding!");
       }
     }
   };
 
   return (
-    <div>
-      <h2>Register</h2>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "#0a0f2c",
+      }}
+    >
+      <div
+        style={{
+          width: "380px",
+          background: "rgba(0, 0, 0, 0.3)",
+          padding: "32px",
+          borderRadius: "16px",
+          boxShadow: "0 0 25px rgba(0,0,0,0.4)",
+          color: "white",
+        }}
+      >
+        <h2 style={{ textAlign: "center", marginBottom: "8px", fontSize: "28px" }}>
+          Register
+        </h2>
 
-      {error && <Alert type="error" message={error} />}
-      {success && <Alert type="success" message={success} />}
+        <p style={{ textAlign: "center", marginBottom: "20px", opacity: 0.7 }}>
+          Create your new account
+        </p>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="username"
-          placeholder="Enter username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-        />
+        {/* SUCCESS ALERT */}
+        {success && <Alert type="success" message={success} />}
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Enter password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
+        {/* ERROR ALERT */}
+        {error && <Alert type="error" message={error} />}
 
-        <button type="submit">Register</button>
-      </form>
+        <form onSubmit={handleSubmit}>
+
+          {/* USERNAME */}
+          <label style={{ fontSize: "14px" }}>Username</label>
+          <input
+            type="text"
+            name="username"
+            placeholder="Enter username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+            style={{
+              width: "100%",
+              padding: "12px",
+              borderRadius: "8px",
+              border: "none",
+              marginTop: "6px",
+              marginBottom: "18px",
+            }}
+          />
+
+          {/* EMAIL */}
+          <label style={{ fontSize: "14px" }}>Email</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            style={{
+              width: "100%",
+              padding: "12px",
+              borderRadius: "8px",
+              border: "none",
+              marginTop: "6px",
+              marginBottom: "18px",
+            }}
+          />
+
+          {/* PASSWORD */}
+          <label style={{ fontSize: "14px" }}>Password</label>
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            style={{
+              width: "100%",
+              padding: "12px",
+              borderRadius: "8px",
+              border: "none",
+              marginTop: "6px",
+              marginBottom: "18px",
+            }}
+          />
+
+          <button
+            type="submit"
+            style={{
+              width: "100%",
+              padding: "12px",
+              background: "linear-gradient(to right, #003cff, #006eff)",
+              border: "none",
+              borderRadius: "8px",
+              color: "white",
+              fontSize: "16px",
+              cursor: "pointer",
+              marginTop: "4px",
+            }}
+          >
+            Create Account
+          </button>
+        </form>
+
+        <p style={{ textAlign: "center", marginTop: "20px" }}>
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            style={{ color: "#4da6ff", textDecoration: "none", fontWeight: "bold" }}
+          >
+            Login here
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
