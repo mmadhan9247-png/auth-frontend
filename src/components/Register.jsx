@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import Alert from "../components/Alert";
 import { useNavigate, Link } from "react-router-dom";
@@ -16,11 +16,6 @@ export default function Register() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // ✅ FIX 2 — Wake backend before user registers (Render cold start fix)
-  useEffect(() => {
-    axios.get(API_BASE_URL).catch(() => {});
-  }, []);
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -34,8 +29,9 @@ export default function Register() {
     setSuccess("");
 
     try {
+      // ✅ FIXED URL — this was your only problem
       const response = await axios.post(
-        `${API_BASE_URL}/auth/register`,
+        `${API_BASE_URL}/register`,
         formData,
         { headers: { "Content-Type": "application/json" } }
       );
@@ -44,7 +40,7 @@ export default function Register() {
       setTimeout(() => navigate("/login"), 1500);
 
     } catch (err) {
-      console.log("REGISTER ERR:", err.response?.data);
+      console.log("REGISTER ERROR:", err.response?.data);
 
       if (err.response) {
         setError(err.response.data.error || "Registration failed!");
@@ -82,10 +78,7 @@ export default function Register() {
           Create your new account
         </p>
 
-        {/* SUCCESS ALERT */}
         {success && <Alert type="success" message={success} />}
-
-        {/* ❗ FIX 1 — Error alert now appears in RED */}
         {error && <Alert type="error" message={error} />}
 
         <form onSubmit={handleSubmit}>
