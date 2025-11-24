@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Alert from "../components/Alert";
 import { useNavigate, Link } from "react-router-dom";
@@ -16,6 +16,11 @@ export default function Register() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  // ✅ FIX 2 — Wake backend before user registers (Render cold start fix)
+  useEffect(() => {
+    axios.get(API_BASE_URL).catch(() => {});
+  }, []);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -30,19 +35,18 @@ export default function Register() {
 
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/register`,
+        `${API_BASE_URL}/auth/register`,
         formData,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
+        { headers: { "Content-Type": "application/json" } }
       );
 
       setSuccess("Account created successfully! Redirecting...");
       setTimeout(() => navigate("/login"), 1500);
 
     } catch (err) {
+      console.log("REGISTER ERR:", err.response?.data);
+
       if (err.response) {
-        // FIXED: Backend returns { error: "message" }
         setError(err.response.data.error || "Registration failed!");
       } else {
         setError("Server not responding!");
@@ -81,12 +85,11 @@ export default function Register() {
         {/* SUCCESS ALERT */}
         {success && <Alert type="success" message={success} />}
 
-        {/* ERROR ALERT */}
-        {error && <Alert type="danger" message={error} />}
+        {/* ❗ FIX 1 — Error alert now appears in RED */}
+        {error && <Alert type="error" message={error} />}
 
         <form onSubmit={handleSubmit}>
 
-          {/* USERNAME */}
           <label style={{ fontSize: "14px" }}>Username</label>
           <input
             type="text"
@@ -105,7 +108,6 @@ export default function Register() {
             }}
           />
 
-          {/* EMAIL */}
           <label style={{ fontSize: "14px" }}>Email</label>
           <input
             type="email"
@@ -124,7 +126,6 @@ export default function Register() {
             }}
           />
 
-          {/* PASSWORD */}
           <label style={{ fontSize: "14px" }}>Password</label>
           <input
             type="password"
