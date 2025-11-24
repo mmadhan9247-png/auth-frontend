@@ -1,93 +1,160 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Alert from "../components/Alert";
 import { useNavigate, Link } from "react-router-dom";
 import { API_BASE_URL } from "../config";
 
-const Login = () => {
-  const [formData, setFormData] = useState({ username: "", password: "" });
-  const [error, setError] = useState("");
+export default function Login() {
   const navigate = useNavigate();
 
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  // Wake backend (Render cold-start)
+  useEffect(() => {
+    axios.get(API_BASE_URL).catch(() => {});
+  }, []);
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
 
     try {
-      const res = await axios.post(
+      const response = await axios.post(
         `${API_BASE_URL}/api/auth/login`,
-        formData
+        formData,
+        { headers: { "Content-Type": "application/json" } }
       );
 
-      localStorage.setItem("token", res.data.access_token);
-      navigate("/dashboard");
+      setSuccess("Login successful! Redirecting...");
+      localStorage.setItem("token", response.data.access_token);
+
+      setTimeout(() => navigate("/dashboard"), 1200);
+
     } catch (err) {
-      setError(
-        err.response?.data?.error || 
-        err.response?.data?.msg || 
-        "Login failed"
-      );
+      console.log("LOGIN ERROR:", err.response?.data);
+
+      if (err.response) {
+        setError(err.response.data.error || "Login failed!");
+      } else {
+        setError("Server not responding!");
+      }
     }
   };
 
   return (
-    <div className="app-shell">
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-md-5 col-lg-4">
-            <div className="card auth-card">
-              <div className="card-header text-center">
-                <div className="auth-title">Login</div>
-                <div className="auth-subtitle">Welcome back, please sign in</div>
-              </div>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "#0a0f2c",
+      }}
+    >
+      <div
+        style={{
+          width: "380px",
+          background: "rgba(0,0,0,0.3)",
+          padding: "32px",
+          borderRadius: "16px",
+          boxShadow: "0 0 25px rgba(0,0,0,0.4)",
+          color: "white",
+        }}
+      >
+        <h2 style={{ textAlign: "center", marginBottom: "8px", fontSize: "28px" }}>
+          Login
+        </h2>
 
-              <div className="card-body">
-                {error && <div className="alert alert-danger">{error}</div>}
+        <p style={{ textAlign: "center", marginBottom: "20px", opacity: 0.7 }}>
+          Welcome back! Please sign in.
+        </p>
 
-                <form onSubmit={handleSubmit}>
-                  <div className="mb-3">
-                    <label className="form-label">Username</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="username"
-                      value={formData.username}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
+        {/* SUCCESS ALERT */}
+        {success && <Alert type="success" message={success} />}
 
-                  <div className="mb-3">
-                    <label className="form-label">Password</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
+        {/* ERROR ALERT */}
+        {error && <Alert type="error" message={error} />}
 
-                  <button type="submit" className="btn btn-primary w-100">
-                    Login
-                  </button>
-                </form>
+        <form onSubmit={handleSubmit}>
 
-                <div className="mt-3 text-center auth-footer-text">
-                  <span>Don&apos;t have an account? </span>
-                  <Link to="/register">Register here</Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          <label style={{ fontSize: "14px" }}>Username</label>
+          <input
+            type="text"
+            name="username"
+            placeholder="Enter username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+            style={{
+              width: "100%",
+              padding: "12px",
+              borderRadius: "8px",
+              border: "none",
+              marginTop: "6px",
+              marginBottom: "18px",
+            }}
+          />
+
+          <label style={{ fontSize: "14px" }}>Password</label>
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            style={{
+              width: "100%",
+              padding: "12px",
+              borderRadius: "8px",
+              border: "none",
+              marginTop: "6px",
+              marginBottom: "18px",
+            }}
+          />
+
+          <button
+            type="submit"
+            style={{
+              width: "100%",
+              padding: "12px",
+              background: "linear-gradient(to right, #003cff, #006eff)",
+              border: "none",
+              borderRadius: "8px",
+              color: "white",
+              fontSize: "16px",
+              cursor: "pointer",
+              marginTop: "4px",
+            }}
+          >
+            Login
+          </button>
+        </form>
+
+        <p style={{ textAlign: "center", marginTop: "20px" }}>
+          Don’t have an account?{" "}
+          <Link
+            to="/register"
+            style={{ color: "#4da6ff", textDecoration: "none", fontWeight: "bold" }}
+          >
+            Register here
+          </Link>
+        </p>
       </div>
     </div>
   );
-};
-
-export default Login;
+}
