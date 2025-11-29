@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Alert from "../components/Alert";
 import { useNavigate, Link } from "react-router-dom";
-import { API_BASE_URL } from "../config";
+import api from "../api";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -17,7 +16,7 @@ export default function Login() {
 
   // Wake backend (Render cold-start)
   useEffect(() => {
-    axios.get(API_BASE_URL).catch(() => {});
+    api.get("/auth/me").catch(() => {});
   }, []);
 
   const handleChange = (e) => {
@@ -33,14 +32,8 @@ export default function Login() {
     setSuccess("");
 
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/api/auth/login`,
-        formData,
-        { headers: { "Content-Type": "application/json" } }
-      );
-
+      await api.post("/auth/login", formData);
       setSuccess("Login successful! Redirecting...");
-      localStorage.setItem("token", response.data.access_token);
 
       setTimeout(() => navigate("/dashboard"), 1200);
 

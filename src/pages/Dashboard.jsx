@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import API_BASE_URL from "../config";
+import api from "../api";
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -14,16 +13,9 @@ const Dashboard = () => {
     fetchStats();
   }, []);
 
-  const getAuthHeaders = () => {
-    const token = localStorage.getItem("token");
-    return { Authorization: `Bearer ${token}` };
-  };
-
   const fetchUser = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/auth/me`, {
-        headers: getAuthHeaders(),
-      });
+      const res = await api.get("/auth/me");
       setUser(res.data.user);
     } catch {
       setError("Failed to load user info");
@@ -32,25 +24,24 @@ const Dashboard = () => {
 
   const fetchStats = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/dashboard`, {
-        headers: getAuthHeaders(),
-      });
+      const res = await api.get("/dashboard");
       setStats(res.data.data);
     } catch {
       setError("Failed to load dashboard stats");
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
+  const handleLogout = async () => {
+    try {
+      await api.post("/auth/logout");
+    } catch {
+    }
     navigate("/login");
   };
 
   const handleProfile = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/profile`, {
-        headers: getAuthHeaders(),
-      });
+      const res = await api.get("/profile");
       alert(JSON.stringify(res.data, null, 2));
     } catch (err) {
       alert(
@@ -62,9 +53,7 @@ const Dashboard = () => {
 
   const handleAdmin = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/admin`, {
-        headers: getAuthHeaders(),
-      });
+      const res = await api.get("/admin");
       alert(JSON.stringify(res.data, null, 2));
     } catch (err) {
       alert(

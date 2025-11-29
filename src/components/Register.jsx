@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Alert from "../components/Alert";
 import { useNavigate, Link } from "react-router-dom";
-import { API_BASE_URL } from "../config";
+import api from "../api";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -18,7 +17,7 @@ export default function Register() {
 
   // Wake backend
   useEffect(() => {
-    axios.get(API_BASE_URL).catch(() => {});
+    api.get("/auth/me").catch(() => {});
   }, []);
 
   const handleChange = (e) => {
@@ -34,12 +33,7 @@ export default function Register() {
     setSuccess("");
 
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/api/auth/register`,   // ✅ FINAL CORRECT URL
-        formData,
-        { headers: { "Content-Type": "application/json" } }
-      );
-
+      await api.post("/auth/register", formData);
       setSuccess("Account created successfully! Redirecting...");
       setTimeout(() => navigate("/login"), 1500);
 
