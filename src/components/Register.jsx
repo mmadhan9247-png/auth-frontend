@@ -97,6 +97,8 @@ export default function Register() {
               padding: "12px",
               borderRadius: "8px",
               border: "none",
+              backgroundColor: "white",
+              color: "#111827",
               marginTop: "6px",
               marginBottom: "18px",
             }}
@@ -115,6 +117,8 @@ export default function Register() {
               padding: "12px",
               borderRadius: "8px",
               border: "none",
+              backgroundColor: "white",
+              color: "#111827",
               marginTop: "6px",
               marginBottom: "18px",
             }}
@@ -133,6 +137,8 @@ export default function Register() {
               padding: "12px",
               borderRadius: "8px",
               border: "none",
+              backgroundColor: "white",
+              color: "#111827",
               marginTop: "6px",
               marginBottom: "18px",
             }}
