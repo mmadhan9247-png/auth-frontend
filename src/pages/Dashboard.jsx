@@ -5,7 +5,6 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import MetricCard from "../components/MetricCard";
 import UserActivityLineChart from "../components/Charts/LineChart";
-import SalesBarChart from "../components/Charts/BarChart";
 import CategoryPieChart from "../components/Charts/PieChart";
 
 /**
@@ -25,23 +24,64 @@ const userActivity = [
   { day: "Sun", value: 450 },
 ];
 
-const salesData = [
-  { label: "Jan", value: 1200 },
-  { label: "Feb", value: 1900 },
-  { label: "Mar", value: 1650 },
+const categoryData = [
+  { name: "Transaction view", value: 45 },
+  { name: "Sales", value: 35 },
+  { name: "Payment", value: 20 },
 ];
 
-const categoryData = [
-  { name: "Electronics", value: 45 },
-  { name: "Furniture", value: 25 },
-  { name: "Clothing", value: 30 },
+const transactions = [
+  {
+    title: "Dana Schultz",
+    date: "22 Sep 2022 10:30 AM",
+    medium: "Visa",
+    amount: "$5,022",
+  },
+  {
+    title: "Jessie Moen",
+    date: "21 Sep 2022 09:18 AM",
+    medium: "PayPal",
+    amount: "$3,480",
+  },
+  {
+    title: "Carroll Emmerich",
+    date: "20 Sep 2022 11:02 AM",
+    medium: "Payoneer",
+    amount: "$1,220",
+  },
+  {
+    title: "Elaine Dicki",
+    date: "19 Sep 2022 08:47 AM",
+    medium: "Visa",
+    amount: "$980",
+  },
 ];
 
 const metricStats = [
-  { title: "Total Users", value: "15.2K" },
-  { title: "Revenue", value: "$45,200" },
-  { title: "Orders", value: "1,240" },
-  { title: "Conversion", value: "4.3%" },
+  {
+    title: "Total income",
+    value: "$8,500",
+    change: "35%",
+    changeLabel: "Increased from last month",
+  },
+  {
+    title: "Total spending",
+    value: "$4,800",
+    change: "75%",
+    changeLabel: "Increased from last month",
+  },
+  {
+    title: "Spending goal",
+    value: "$9,254",
+    change: "15%",
+    changeLabel: "Increased from last month",
+  },
+  {
+    title: "Total transactions",
+    value: "$17,000",
+    change: "85%",
+    changeLabel: "Increased from last month",
+  },
 ];
 
 const Dashboard = () => {
@@ -158,6 +198,8 @@ const Dashboard = () => {
                   key={metric.title}
                   title={metric.title}
                   value={metric.value}
+                  change={metric.change}
+                  changeLabel={metric.changeLabel}
                   index={index}
                 />
               ))}
@@ -169,15 +211,27 @@ const Dashboard = () => {
                   <div className="mb-4 flex items-center justify-between gap-3">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                        User activity
+                        Your assets
                       </p>
                       <p className="text-sm font-medium text-slate-100">
-                        Weekly engagement trend
+                        Balance & cash flow
                       </p>
                     </div>
-                    <span className="rounded-full bg-slate-900/80 px-2 py-0.5 text-[11px] font-medium text-slate-400">
-                      Last 7 days
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <div className="hidden items-center gap-3 text-xs text-slate-400 sm:flex">
+                        <span className="flex items-center gap-1">
+                          <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                          <span>Income</span>
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <span className="h-2 w-2 rounded-full bg-amber-400" />
+                          <span>Expense</span>
+                        </span>
+                      </div>
+                      <span className="rounded-full bg-slate-900/80 px-2 py-0.5 text-[11px] font-medium text-slate-400">
+                        Daily
+                      </span>
+                    </div>
                   </div>
                   <div className="h-64">
                     <UserActivityLineChart data={userActivity} />
@@ -186,31 +240,67 @@ const Dashboard = () => {
               </div>
 
               <div>
-                <div className="h-full rounded-2xl border border-slate-800 bg-slate-950/80 p-4 shadow-xl shadow-slate-950/80">
-                  <div className="mb-4 flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                        Category split
-                      </p>
-                      <p className="text-sm font-medium text-slate-100">
-                        Revenue by category
-                      </p>
+                <div className="flex h-full flex-col justify-between rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4 shadow-xl shadow-slate-950/80">
+                  <div>
+                    <div className="mb-4 flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                          My cards
+                        </p>
+                        <p className="text-sm font-medium text-slate-100">
+                          Active debit card
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        className="rounded-full border border-slate-700 bg-slate-900/80 px-3 py-1.5 text-[11px] font-medium text-slate-200 hover:border-slate-500 hover:bg-slate-800"
+                      >
+                        Add new
+                      </button>
                     </div>
-                    <span className="rounded-full bg-slate-900/80 px-2 py-0.5 text-[11px] font-medium text-slate-400">
-                      Current
-                    </span>
+
+                    <div className="relative mt-2">
+                      <div className="pointer-events-none absolute -top-4 right-4 h-20 w-28 rounded-2xl bg-gradient-to-br from-fuchsia-500/40 via-sky-500/30 to-indigo-500/40 opacity-60 blur-md" />
+                      <div className="mb-8 rounded-2xl bg-gradient-to-br from-indigo-500 via-sky-500 to-fuchsia-500 p-4 pb-6 text-slate-950 shadow-lg shadow-indigo-500/40">
+                        <div className="flex items-center justify-between text-xs font-medium">
+                          <span>DEBIT CARD</span>
+                          <span className="rounded-full bg-white/15 px-2 py-0.5 text-[10px] uppercase tracking-[0.16em]">
+                            Active
+                          </span>
+                        </div>
+                        <p className="mt-4 text-lg font-semibold tracking-wide">
+                          0123 4567 8901 2345
+                        </p>
+                        <div className="mt-4 flex items-center justify-between text-[11px]">
+                          <div>
+                            <p className="text-[10px] uppercase tracking-[0.16em]">
+                              Card holder
+                            </p>
+                            <p className="font-medium">{user?.username || "Ethan Cole"}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] uppercase tracking-[0.16em]">
+                              Expires
+                            </p>
+                            <p className="font-medium">12/24</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="-mt-6 mx-auto w-[85%] rounded-2xl border border-slate-700/80 bg-slate-900/90 px-5 py-3 text-xs text-slate-300 shadow-xl shadow-slate-950/80">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
+                            Balance
+                          </span>
+                          <span className="text-xs text-emerald-400">+20.4%</span>
+                        </div>
+                        <p className="mt-1 text-lg font-semibold text-slate-50">
+                          $5,540.00
+                        </p>
+                        <p className="mt-1 text-[11px] text-slate-400">**** 2345 · Visa</p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="h-52">
-                    <CategoryPieChart data={categoryData} />
-                  </div>
-                  <ul className="mt-4 space-y-1 text-xs text-slate-400">
-                    {categoryData.map((item) => (
-                      <li key={item.name} className="flex items-center justify-between">
-                        <span>{item.name}</span>
-                        <span className="text-slate-300">{item.value}%</span>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               </div>
             </section>
@@ -221,49 +311,85 @@ const Dashboard = () => {
                   <div className="mb-4 flex items-center justify-between gap-3">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                        Monthly revenue
+                        Latest transactions
                       </p>
                       <p className="text-sm font-medium text-slate-100">
-                        Sales performance
+                        Recent activity
                       </p>
                     </div>
-                    <span className="rounded-full bg-slate-900/80 px-2 py-0.5 text-[11px] font-medium text-slate-400">
-                      Q1 snapshot
-                    </span>
+                    <button
+                      type="button"
+                      className="text-xs font-medium text-slate-400 hover:text-slate-200"
+                    >
+                      See all
+                    </button>
                   </div>
-                  <div className="h-60">
-                    <SalesBarChart data={salesData} />
+
+                  <div className="-mx-2 overflow-x-auto">
+                    <table className="min-w-full table-fixed border-separate border-spacing-y-1 text-xs">
+                      <thead className="text-slate-500">
+                        <tr>
+                          <th className="px-2 py-1 text-left font-medium">Title</th>
+                          <th className="px-2 py-1 text-left font-medium">Date</th>
+                          <th className="px-2 py-1 text-left font-medium">Medium</th>
+                          <th className="px-2 py-1 text-right font-medium">Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody className="text-slate-200">
+                        {transactions.map((item) => (
+                          <tr key={item.title}>
+                            <td className="px-2 py-1.5">
+                              <span className="text-[13px] font-medium">{item.title}</span>
+                            </td>
+                            <td className="px-2 py-1.5 text-slate-400">{item.date}</td>
+                            <td className="px-2 py-1.5">
+                              <span className="inline-flex items-center rounded-full bg-slate-900/80 px-2 py-0.5 text-[11px] text-slate-300">
+                                {item.medium}
+                              </span>
+                            </td>
+                            <td className="px-2 py-1.5 text-right text-slate-100">{item.amount}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
 
               <div>
-                <div className="flex h-full flex-col justify-between rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4 shadow-xl shadow-slate-950/80">
+                <div className="flex h-full flex-col justify-between rounded-2xl border border-slate-800 bg-slate-950/80 p-4 shadow-xl shadow-slate-950/80">
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                      Session summary
+                      Transaction view
                     </p>
                     <p className="mt-1 text-sm font-medium text-slate-100">
-                      You are viewing a simulated analytics dashboard with dummy data.
-                    </p>
-                    <p className="mt-2 text-xs text-slate-400">
-                      Hook these widgets up to your real API endpoints to turn this
-                      into a production analytics surface. The layout is optimised
-                      for quick-glance KPIs, activity trends, and category
-                      breakdowns.
+                      Summary by type
                     </p>
                   </div>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    <button
-                      type="button"
-                      onClick={handleLogout}
-                      className="rounded-full border border-red-500/60 bg-red-500/10 px-3 py-1.5 text-xs font-medium text-red-100 shadow-sm shadow-red-500/40 hover:bg-red-500/20"
-                    >
-                      Logout
-                    </button>
-                    <span className="rounded-full border border-slate-800 bg-slate-900/80 px-3 py-1.5 text-[11px] font-medium text-slate-400">
-                      Auth state: simulated via PrivateRoute
-                    </span>
+
+                  <div className="mt-5 flex flex-col items-center gap-4 md:flex-row md:items-center">
+                    <div className="flex-1">
+                      <div className="mx-auto h-40 w-40">
+                        <CategoryPieChart data={categoryData} />
+                      </div>
+                    </div>
+                    <div className="flex-1 space-y-2 text-xs text-slate-400">
+                      <p className="text-2xl font-semibold tracking-tight text-slate-50">
+                        $55,501
+                      </p>
+                      <p className="text-[11px] text-emerald-400">+20% growth this month</p>
+                      <ul className="mt-2 space-y-1">
+                        {categoryData.map((item) => (
+                          <li
+                            key={item.name}
+                            className="flex items-center justify-between"
+                          >
+                            <span>{item.name}</span>
+                            <span className="text-slate-200">{item.value}%</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
