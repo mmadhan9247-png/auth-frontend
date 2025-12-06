@@ -1,11 +1,12 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 const navItems = [
-  { label: "Overview", badge: "Live" },
-  { label: "Analytics", badge: "New" },
-  { label: "Users" },
-  { label: "Billing" },
-  { label: "Settings" },
+  { label: "Overview", badge: "Live", to: "/dashboard" },
+  { label: "Analytics", badge: "New", to: "/analytics" },
+  { label: "Users", to: "/users" },
+  { label: "Billing", to: "/billing" },
+  { label: "Settings", to: "/settings" },
 ];
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -49,10 +50,17 @@ const Sidebar = ({ isOpen, onClose }) => {
 
           <nav className="space-y-1">
             {navItems.map((item) => (
-              <button
+              <NavLink
                 key={item.label}
-                type="button"
-                className="group flex w-full items-center justify-between rounded-xl border border-transparent bg-transparent px-3 py-2.5 text-sm font-medium text-slate-300 transition hover:border-slate-700 hover:bg-slate-900/70 hover:text-slate-50"
+                to={item.to}
+                end={item.to === "/dashboard"}
+                className={({ isActive }) =>
+                  `group flex w-full items-center justify-between rounded-xl border px-3 py-2.5 text-sm font-medium transition ${
+                    isActive
+                      ? "border-slate-700 bg-slate-900/80 text-slate-50"
+                      : "border-transparent bg-transparent text-slate-300 hover:border-slate-700 hover:bg-slate-900/70 hover:text-slate-50"
+                  }`
+                }
               >
                 <span className="flex items-center gap-2">
                   <span className="h-1.5 w-1.5 rounded-full bg-slate-700 group-hover:bg-indigo-400" />
@@ -63,7 +71,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                     {item.badge}
                   </span>
                 )}
-              </button>
+              </NavLink>
             ))}
           </nav>
 

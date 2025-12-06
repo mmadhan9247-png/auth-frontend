@@ -1,6 +1,12 @@
 import React from "react";
 
-const Navbar = ({ onMenuClick, user, onLogout }) => {
+const Navbar = ({
+  onMenuClick,
+  user,
+  onLogout,
+  pageTitle = "Dashboard",
+  pageSubtitle = "Analytics overview",
+}) => {
   return (
     <header className="sticky top-0 z-20 border-b border-slate-800/70 bg-slate-950/80 backdrop-blur">
       <div className="flex items-center justify-between px-4 py-3 md:px-6 lg:px-8">
@@ -19,10 +25,10 @@ const Navbar = ({ onMenuClick, user, onLogout }) => {
 
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-              Dashboard
+              {pageTitle}
             </p>
             <p className="text-sm font-medium text-slate-100 md:text-base">
-              Analytics overview
+              {pageSubtitle}
             </p>
           </div>
         </div>
