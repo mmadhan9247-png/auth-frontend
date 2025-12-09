@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Alert from "../components/Alert";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../api";
+import GoogleLoginButton from "./GoogleLoginButton";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -141,6 +142,13 @@ export default function Login() {
             Login
           </button>
         </form>
+
+        <div style={{ marginTop: "20px" }}>
+          <div style={{ textAlign: "center", marginBottom: "10px", opacity: 0.7 }}>
+            Or continue with
+          </div>
+          <GoogleLoginButton />
+        </div>
 
         <p style={{ textAlign: "center", marginTop: "20px" }}>
           Don’t have an account?{" "}
