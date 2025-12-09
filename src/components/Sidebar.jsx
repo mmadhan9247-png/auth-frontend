@@ -55,7 +55,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                 to={item.to}
                 end={item.to === "/dashboard"}
                 className={({ isActive }) =>
-                  `group flex w-full items-center justify-between rounded-xl border px-3 py-2.5 text-sm font-medium transition ${
+                  `group flex w-full items-center justify-between rounded-xl border px-3 py-2.5 text-sm font-medium transition no-underline ${
                     isActive
                       ? "border-slate-700 bg-slate-900/80 text-slate-50"
                       : "border-transparent bg-transparent text-slate-300 hover:border-slate-700 hover:bg-slate-900/70 hover:text-slate-50"
