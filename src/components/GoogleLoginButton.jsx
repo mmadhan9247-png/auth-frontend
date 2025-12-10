@@ -12,9 +12,13 @@ const GoogleLoginButton = () => {
     setError("");
 
     try {
-      await api.post("/auth/google", {
+      const res = await api.post("/auth/google", {
         credential: credentialResponse.credential,
       });
+
+      if (res.data && res.data.access_token) {
+        localStorage.setItem("access_token", res.data.access_token);
+      }
 
       navigate("/dashboard");
     } catch (err) {

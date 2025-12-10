@@ -33,7 +33,12 @@ export default function Login() {
     setSuccess("");
 
     try {
-      await api.post("/auth/login", formData);
+      const res = await api.post("/auth/login", formData);
+
+      if (res.data && res.data.access_token) {
+        localStorage.setItem("access_token", res.data.access_token);
+      }
+
       setSuccess("Login successful! Redirecting...");
 
       setTimeout(() => navigate("/dashboard"), 1200);

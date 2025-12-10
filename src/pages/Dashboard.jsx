@@ -109,6 +109,9 @@ const Dashboard = () => {
     } catch {
       // ignore
     }
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("access_token");
+    }
     navigate("/login");
   };
 
