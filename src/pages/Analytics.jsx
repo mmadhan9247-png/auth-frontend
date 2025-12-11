@@ -8,6 +8,7 @@ import UserActivityLineChart from "../components/Charts/LineChart";
 import SalesBarChart from "../components/Charts/BarChart";
 import CategoryPieChart from "../components/Charts/PieChart";
 import RevenueAreaChart from "../components/Charts/AreaChart";
+import ConfirmModal from "../components/ConfirmModal";
 
 const kpiStats = [
   { title: "Active users", value: "18,240", change: "24%", changeLabel: "vs last month" },
@@ -54,6 +55,7 @@ const Analytics = () => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -69,17 +71,33 @@ const Analytics = () => {
     fetchUser();
   }, []);
 
-  const handleLogout = async () => {
+  const openLogoutModal = () => {
+    setLogoutModalOpen(true);
+  };
+
+  const handleConfirmLogout = async () => {
+    setLogoutModalOpen(false);
     try {
       await api.post("/auth/logout");
     } catch {
-      // ignore
+    }
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("access_token");
     }
     navigate("/login");
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100">
+      <ConfirmModal
+        isOpen={logoutModalOpen}
+        title="Logout"
+        message="Are you sure you want to logout?"
+        confirmLabel="Logout"
+        cancelLabel="Cancel"
+        onConfirm={handleConfirmLogout}
+        onCancel={() => setLogoutModalOpen(false)}
+      />
       <div className="flex min-h-screen">
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
@@ -87,7 +105,7 @@ const Analytics = () => {
           <Navbar
             onMenuClick={() => setSidebarOpen(true)}
             user={user}
-            onLogout={handleLogout}
+            onLogout={openLogoutModal}
             pageTitle="Analytics"
             pageSubtitle="Engagement & revenue"
           />

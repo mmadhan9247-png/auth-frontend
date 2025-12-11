@@ -4,6 +4,7 @@ import api from "../api";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import UserActivityLineChart from "../components/Charts/LineChart";
+import ConfirmModal from "../components/ConfirmModal";
 
 const loginActivity = [
   { day: "Mon", value: 18 },
@@ -39,10 +40,20 @@ const Settings = () => {
     fetchUser();
   }, []);
 
-  const handleLogout = async () => {
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+
+  const openLogoutModal = () => {
+    setLogoutModalOpen(true);
+  };
+
+  const handleConfirmLogout = async () => {
+    setLogoutModalOpen(false);
     try {
       await api.post("/auth/logout");
     } catch {
+    }
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("access_token");
     }
     navigate("/login");
   };
@@ -58,6 +69,15 @@ const Settings = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100">
+      <ConfirmModal
+        isOpen={logoutModalOpen}
+        title="Logout"
+        message="Are you sure you want to logout?"
+        confirmLabel="Logout"
+        cancelLabel="Cancel"
+        onConfirm={handleConfirmLogout}
+        onCancel={() => setLogoutModalOpen(false)}
+      />
       <div className="flex min-h-screen">
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
@@ -65,7 +85,7 @@ const Settings = () => {
           <Navbar
             onMenuClick={() => setSidebarOpen(true)}
             user={user}
-            onLogout={handleLogout}
+            onLogout={openLogoutModal}
             pageTitle="Settings"
             pageSubtitle="Profile, security, notifications"
           />

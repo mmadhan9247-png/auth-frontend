@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar";
 import MetricCard from "../components/MetricCard";
 import SalesBarChart from "../components/Charts/BarChart";
 import CategoryPieChart from "../components/Charts/PieChart";
+import ConfirmModal from "../components/ConfirmModal";
 
 const mockUsers = [
   {
@@ -114,6 +115,7 @@ const Users = () => {
   }));
 
   const navigate = useNavigate();
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -128,11 +130,18 @@ const Users = () => {
     fetchUser();
   }, []);
 
-  const handleLogout = async () => {
+  const openLogoutModal = () => {
+    setLogoutModalOpen(true);
+  };
+
+  const handleConfirmLogout = async () => {
+    setLogoutModalOpen(false);
     try {
       await api.post("/auth/logout");
     } catch {
-      // ignore
+    }
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("access_token");
     }
     navigate("/login");
   };
@@ -148,6 +157,15 @@ const Users = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100">
+      <ConfirmModal
+        isOpen={logoutModalOpen}
+        title="Logout"
+        message="Are you sure you want to logout?"
+        confirmLabel="Logout"
+        cancelLabel="Cancel"
+        onConfirm={handleConfirmLogout}
+        onCancel={() => setLogoutModalOpen(false)}
+      />
       <div className="flex min-h-screen">
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
@@ -155,7 +173,7 @@ const Users = () => {
           <Navbar
             onMenuClick={() => setSidebarOpen(true)}
             user={user}
-            onLogout={handleLogout}
+            onLogout={openLogoutModal}
             pageTitle="Users"
             pageSubtitle="Team and access"
           />

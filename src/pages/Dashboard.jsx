@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar";
 import MetricCard from "../components/MetricCard";
 import UserActivityLineChart from "../components/Charts/LineChart";
 import CategoryPieChart from "../components/Charts/PieChart";
+import ConfirmModal from "../components/ConfirmModal";
 
 /**
  * README-style UI inspiration (Dribbble search terms):
@@ -88,6 +89,7 @@ const Dashboard = () => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -103,11 +105,15 @@ const Dashboard = () => {
     fetchUser();
   }, []);
 
-  const handleLogout = async () => {
+  const openLogoutModal = () => {
+    setLogoutModalOpen(true);
+  };
+
+  const handleConfirmLogout = async () => {
+    setLogoutModalOpen(false);
     try {
       await api.post("/auth/logout");
     } catch {
-      // ignore
     }
     if (typeof window !== "undefined") {
       localStorage.removeItem("access_token");
@@ -141,6 +147,15 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100">
+      <ConfirmModal
+        isOpen={logoutModalOpen}
+        title="Logout"
+        message="Are you sure you want to logout?"
+        confirmLabel="Logout"
+        cancelLabel="Cancel"
+        onConfirm={handleConfirmLogout}
+        onCancel={() => setLogoutModalOpen(false)}
+      />
       <div className="flex min-h-screen">
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
@@ -148,7 +163,7 @@ const Dashboard = () => {
           <Navbar
             onMenuClick={() => setSidebarOpen(true)}
             user={user}
-            onLogout={handleLogout}
+            onLogout={openLogoutModal}
           />
 
           <main className="flex-1 px-4 pb-8 pt-4 md:px-6 lg:px-8">
